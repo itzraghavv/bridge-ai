@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  apiSchemas ApiSchema[]
+  workflows  Workflow[]
+
+  @@map("users")
+}
+
+model ApiSchema {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  schemaType  String   // "openapi" or "json"
+  schemaData  Json     // The actual schema content
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflows Workflow[] @relation("SourceApiSchema")
+  targetWorkflows Workflow[] @relation("TargetApiSchema")
+
+  @@map("api_schemas")
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  sourceApiId String
+  targetApiId String
+  mapping     Json     // AI-generated field mappings
+  workflowPlan Json    // AI-generated workflow execution plan
+  isActive    Boolean  @default(false)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceApi   ApiSchema @relation("SourceApiSchema", fields: [sourceApiId], references: [id], onDelete: Cascade)
+  targetApi   ApiSchema @relation("TargetApiSchema", fields: [targetApiId], references: [id], onDelete: Cascade)
+
+  @@map("workflows")
+}
