@@ -1,45 +1,49 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { LoginForm } from '@/components/auth/LoginForm'
-import { SignUpForm } from '@/components/auth/SignUpForm'
-import { useAuth } from '@/contexts/AuthContext'
-import { motion } from 'framer-motion'
-import { Zap, Shield, Cpu } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { SignUpForm } from "@/components/auth/SignUpForm";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
+import { Zap, Shield, Cpu } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
-  const [showSignUp, setShowSignUp] = useState(false)
-  const { user, loading } = useAuth()
+  const [showSignUp, setShowSignUp] = useState(false);
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   // Debug logging
-  console.log('HomePage render:', { user, loading, hasUser: !!user })
+  console.log("HomePage render:", { user, loading, hasUser: !!user });
 
   // Fallback redirect in case middleware doesn't work
   useEffect(() => {
     if (!loading && user) {
-      console.log('Redirecting to dashboard (client-side)')
-      router.push('/dashboard')   // no full reload
+      console.log("Redirecting to dashboard (client-side)");
+      router.push("/dashboard"); // no full reload
     }
-  }, [user, loading, router])
-
+  }, [user, loading, router]);
 
   if (loading) {
-    console.log('HomePage: Loading state')
+    console.log("HomePage: Loading state");
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
   if (user) {
-    console.log('HomePage: User authenticated, should redirect')
+    console.log("HomePage: User authenticated, should redirect");
     // Middleware will handle redirect to dashboard
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -48,10 +52,10 @@ export default function HomePage() {
           <p className="text-gray-600">Redirecting to dashboard...</p>
         </div>
       </div>
-    )
+    );
   }
 
-  console.log('HomePage: No user, showing auth forms')
+  console.log("HomePage: No user, showing auth forms");
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Header */}
@@ -82,12 +86,14 @@ export default function HomePage() {
             <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
               Connect Any APIs with
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">
-                {' '}AI Intelligence
+                {" "}
+                AI Intelligence
               </span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Automatically generate bridges between different APIs using AI reasoning. 
-              Upload schemas, get intelligent mappings, and execute workflows seamlessly.
+              Automatically generate bridges between different APIs using AI
+              reasoning. Upload schemas, get intelligent mappings, and execute
+              workflows seamlessly.
             </p>
           </motion.div>
 
@@ -102,22 +108,34 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Cpu className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">AI-Powered Analysis</h3>
-              <p className="text-gray-600">Intelligent schema parsing and field mapping using GroqAI</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                AI-Powered Analysis
+              </h3>
+              <p className="text-gray-600">
+                Intelligent schema parsing and field mapping using GroqAI
+              </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Universal Adapter</h3>
-              <p className="text-gray-600">Connect any API format - OpenAPI, JSON, or custom schemas</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Universal Adapter
+              </h3>
+              <p className="text-gray-600">
+                Connect any API format - OpenAPI, JSON, or custom schemas
+              </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Secure & Scalable</h3>
-              <p className="text-gray-600">Built with Supabase and Prisma for enterprise-grade reliability</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Secure & Scalable
+              </h3>
+              <p className="text-gray-600">
+                Built with Supabase and Prisma for enterprise-grade reliability
+              </p>
             </div>
           </motion.div>
         </div>
@@ -132,28 +150,26 @@ export default function HomePage() {
           <Card className="shadow-xl border-0">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">
-                {showSignUp ? 'Create Account' : 'Welcome Back'}
+                {showSignUp ? "Create Account" : "Welcome Back"}
               </CardTitle>
               <CardDescription>
-                {showSignUp 
-                  ? 'Join AI Bridge to start connecting APIs' 
-                  : 'Sign in to your AI Bridge account'
-                }
+                {showSignUp
+                  ? "Join AI Bridge to start connecting APIs"
+                  : "Sign in to your AI Bridge account"}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {showSignUp ? <SignUpForm /> : <LoginForm />}
-              
+
               <div className="mt-6 text-center">
                 <Button
                   variant="link"
                   onClick={() => setShowSignUp(!showSignUp)}
                   className="text-blue-600 hover:text-blue-700"
                 >
-                  {showSignUp 
-                    ? 'Already have an account? Sign in' 
-                    : "Don't have an account? Sign up"
-                  }
+                  {showSignUp
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign up"}
                 </Button>
               </div>
             </CardContent>
@@ -167,12 +183,16 @@ export default function HomePage() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-20 text-center"
         >
-          <h2 className="text-2xl font-semibold text-gray-900 mb-8">See It In Action</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-8">
+            See It In Action
+          </h2>
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="bg-blue-50 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900 mb-2">Weather API</h4>
-                <p className="text-sm text-blue-700">Temperature, condition, timestamp</p>
+                <p className="text-sm text-blue-700">
+                  Temperature, condition, timestamp
+                </p>
               </div>
               <div className="flex items-center justify-center">
                 <div className="flex items-center space-x-2">
@@ -184,19 +204,23 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="bg-green-50 rounded-lg p-4">
-                <h4 className="font-medium text-green-900 mb-2">Calendar API</h4>
-                <p className="text-sm text-green-700">Event title, description, time</p>
+                <h4 className="font-medium text-green-900 mb-2">
+                  Calendar API
+                </h4>
+                <p className="text-sm text-green-700">
+                  Event title, description, time
+                </p>
               </div>
             </div>
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <p className="text-sm text-gray-600">
-                <strong>AI Generated Workflow:</strong> When weather API returns high temperature, 
-                create calendar event for heat advisory
+                <strong>AI Generated Workflow:</strong> When weather API returns
+                high temperature, create calendar event for heat advisory
               </p>
             </div>
           </div>
         </motion.div>
       </main>
     </div>
-  )
+  );
 }
