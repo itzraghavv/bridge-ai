@@ -6,9 +6,13 @@ export async function POST(request: Request) {
   const supabase = await createRouteHandlerClient({ cookies });
   const { event, session } = await request.json();
 
-  if (event === 'SIGNED_IN' && session) {
+  if (event === "SIGNED_IN" && session) {
     // This updates cookies so SSR/middleware can read the user
-    await supabase.auth.setSession(session)
+    await supabase.auth.setSession(session);
+  }
+
+  if (event === "SIGNED_OUT" && session) {
+    await supabase.auth.signOut();
   }
 
   return NextResponse.json({ success: true });
