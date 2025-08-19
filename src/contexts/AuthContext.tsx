@@ -32,11 +32,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       console.log('AuthContext: Auth state change:', { event: _event, session, user: session?.user })
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
+      // Sync session to server for middleware
+      await fetch('/api/auth/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: _event, session }),
+      });
     })
 
     return () => subscription.unsubscribe()
@@ -60,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
+    console.log('AuthContext: Signing out:', error)
     if (error) throw error
   }
 
